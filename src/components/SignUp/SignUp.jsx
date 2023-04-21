@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {Link} from 'react-router-dom';
+import { AuthContext } from '../Providers/AuthProvider';
 
 const SignUp = () => {
     const [error, setError] = useState('');
 
+    const {createUser} = useContext(AuthContext);
+    
 
     const handleSignUp = event => {
 
@@ -12,7 +15,8 @@ const SignUp = () => {
         const email = form.email.value;
         const password = form.password.value;
         const confirm = form.confirm.value;
-        console.log(email, password, confirm);
+        // console.log(email, password, confirm);
+        setError('');
 
         if(password !== confirm){
             setError('Password did not match!!!')
@@ -22,6 +26,17 @@ const SignUp = () => {
             setError('Password must be 6 charecter')
             return
         }
+
+        createUser(email, password)
+        .then(result => {
+            const loggedUser = result.user;
+            console.log(loggedUser);
+            
+        })
+        .catch(error => {
+            console.log(error);
+            setError(error.message)
+        })
 
     }
     return (
